@@ -1,16 +1,19 @@
 from flask import Flask, render_template, request, session, jsonify
 from twilio.base.exceptions import TwilioRestException
 from twilio.rest import Client
+from dotenv import load_dotenv
 from flask_session import Session
 import random
 import time
+import os
+load_dotenv()
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'your secret key'
+app.config['SECRET_KEY'] = 'hello@123'
 app.config['SESSION_TYPE'] = 'filesystem'
-ACCOUNT_SID = "your_sid"
-AUTH_TOKEN = "your_token"
-TWILIO_PHONE_NUMBER = "your_twilio_phonenumber"  
+ACCOUNT_SID = os.getenv("ACCOUNT_SID")
+AUTH_TOKEN = os.getenv("AUTH_TOKEN")
+TWILIO_PHONE_NUMBER = os.getenv("TWILIO_PHONE_NUMBER")
 twilio_client = Client(ACCOUNT_SID, AUTH_TOKEN)
 Session(app)
 
@@ -20,8 +23,8 @@ def generate_otp():
 def send_otp(twilio_client, phone_number, otp):
     try:
         message = twilio_client.messages.create(
-            body=f'Your OTP is: {otp}',
-            from_=TWILIO_PHONE_NUMBER,
+            from_=os.getenv("TWILIO_PHONE_NUMBER"),
+            body=f'Your OTP is {otp}',
             to=phone_number
         )
         return message
@@ -38,7 +41,6 @@ def get_otp():
         phone_number = str(request.form['phone-number'])
         otp = generate_otp()
         message = send_otp(twilio_client, phone_number, otp)
-
         if message:
             session['otp_code'] = otp
             session['otp_time'] = time.time()
@@ -50,7 +52,7 @@ def get_otp():
                     user_data[field] = request.form.get(field)
 
             session['user_data'] = user_data
-
+            print(user_data)
             return jsonify({"message_sid": message.sid, "status": "OTP sent"})
         else:
             return jsonify({"error": "Failed to send OTP"})
@@ -58,29 +60,31 @@ def get_otp():
 
 @app.route('/verifyOTP', methods=['POST'])
 def verify_otp():
+
     if 'verification-code' in request.form:
         code = request.form['verification-code']
         if code == session.get('otp_code'):
             # Check if the OTP is still valid (generated within the last 60 seconds)
             otp_time = session.get('otp_time', 0)
             current_time = time.time()
-            if current_time - otp_time <= 60:
-                user_data = session.get('user_data')
-
+            if current_time - otp_time <= 120:
+                #We can collect user data directly from session
+                user_details = session.get('user_data')
+    
                 # Collect user data
-                name = request.form.get('name')
-                prn = request.form.get('prn')
-                email = request.form.get('email')
-                branch = request.form.get('branch')
-                phone_number = request.form.get('phone-number')
+                # name = request.form.get('name')
+                # prn = request.form.get('prn')
+                # email = request.form.get('email')
+                # branch = request.form.get('branch')
+                # phone_number = request.form.get('phone-number')
 
                 # You can now process or store this user data as needed
                 user_data = {
-                    'name': name,
-                    'prn': prn,
-                    'email': email,
-                    'branch': branch,
-                    'phone_number': phone_number
+                    'name': user_details['name'],
+                    'prn': user_details['prn'],
+                    'email': user_details['email'],
+                    'branch': user_details['branch'],
+                    'phone_number': user_details['phone-number']
                 }
                 
                 # Printing the stored user data

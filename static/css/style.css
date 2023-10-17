@@ -1,91 +1,96 @@
 * {
-    overflow-y: hidden;
-    font-family: Helvetica, serif;
+  overflow-y: hidden;
+  font-family: Helvetica, serif;
 }
 
 .hidden {
-    visibility: hidden;
-    transition: visibility .3s, opacity .4s linear;
-    opacity: 0;
+  visibility: hidden;
+  transition: visibility 0.3s, opacity 0.4s linear;
+  opacity: 0;
 }
 
 .visible {
-    visibility: visible;
-    transition: visibility .3s, opacity .4s linear;
-    opacity: 1;
+  visibility: visible;
+  transition: visibility 0.3s, opacity 0.4s linear;
+  opacity: 1;
 }
 body {
-    background-color: #c8a2c8;
+  background-color: #c8a2c8;
 }
 .main {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100vh;
 }
 
 .container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 500px;
-    height: 500px;
-    box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
-    border-radius: 10px;
-    background-color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 500px;
+  height: 500px;
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+  border-radius: 10px;
+  background-color: white;
 }
 
 .container > * {
-    margin: 5px 0;
+  margin: 5px 0;
 }
 
-.container #phone_number_field, #otp_code_field {
-    height: 30px;
-    width: 300px;
-    border: solid 1.5px #D3D3D3;
-    border-radius: 5px;
-    margin: 5px 0;
+.container #phone_number_field,
+#otp_code_field {
+  height: 30px;
+  width: 300px;
+  border: solid 1.5px #d3d3d3;
+  border-radius: 5px;
+  margin: 5px 0;
 }
 
-#info{
-    height: 30px;
-    width: 300px;
-    border: solid 1.5px #D3D3D3;
-    border-radius: 5px;
-    margin: 5px 0;
+#info,
+#name,
+#email,
+#prn,
+#branch {
+  height: 30px;
+  width: 300px;
+  border: solid 1.5px #d3d3d3;
+  border-radius: 5px;
+  margin: 5px 0;
 }
 
 #verification-form {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .container button {
-    background-color: #c8a2c8;
-    border: none;
-    height: 40px;
-    width: 250px;
-    color: white;
-    font-size: 16px;
-    transition: .2s linear;
-    margin: 10px 0;
+  background-color: #c8a2c8;
+  border: none;
+  height: 40px;
+  width: 250px;
+  color: white;
+  font-size: 16px;
+  transition: 0.2s linear;
+  margin: 10px 0;
 }
 
 .container button:hover {
-    cursor: pointer;
-    opacity: 0.8;
-    transition: .2s linear;
+  cursor: pointer;
+  opacity: 0.8;
+  transition: 0.2s linear;
 }
 .display__none {
-    display: none !important;
+  display: none !important;
 }
 
 input {
-    display: block;
+  display: block;
 }
 
 h1 {
-    color: #c2b97f;
+  color: #c2b97f;
 }

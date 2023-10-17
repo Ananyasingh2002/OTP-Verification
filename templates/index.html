@@ -1,104 +1,140 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie.edge">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
+    />
+    <meta http-equiv="X-UA-Compatible" content="ie.edge" />
     <title>OTP Verification Demo</title>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
-</head>
-<body>
+    <script
+      src="https://code.jquery.com/jquery-3.6.0.min.js"
+      integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+      crossorigin="anonymous"
+    ></script>
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
+  </head>
+  <body>
     <script>
-        let code;
-        let phoneSent = false;
+      let code;
+      let phoneSent = false;
 
-        function sendPhoneNumber(number) {
-            $.ajax({
-                type: "POST",
-                url: '/getOTP',
-                data: { "phone-number": number },
-                success: function (data) {
-                    console.log(data);
-                    if (data.status) {
-                        alert(data.status);
-                    } else {
-                        code = data.code;
-                        let element = document.getElementById("hidden");
-                        element.classList.remove("hidden");
-                        element.classList.add("visible");
-                        phoneSent = true;
-                    }
-                },
-                error: function (data) {
-                    console.log(data);
-                }
-            });
-        }
-
-        function verification() {
-            let phoneNumber = document.getElementById('phone_number_field').value;
-            if (phoneNumber === "") {
-                alert("You need to input a phone number!");
-                return false;
+      function sendPhoneNumber(number) {
+        let userDetails = {
+          name: document.getElementById("name").value,
+          prn: document.getElementById("prn").value,
+          email: document.getElementById("email").value,
+          branch: document.getElementById("branch").value,
+          "phone-number": number,
+        };
+        $.ajax({
+          type: "POST",
+          url: "/getOTP",
+          data: userDetails,
+          success: function (data) {
+            console.log(data);
+            if (data.status) {
+              alert(data.status);
+            } else {
+              code = data.code;
+              let element = document.getElementById("hidden");
+              element.classList.remove("hidden");
+              element.classList.add("visible");
+              phoneSent = true;
             }
+          },
+          error: function (data) {
+            console.log(data);
+          },
+        });
+      }
 
-            if (!phoneSent) {
-                console.log(phoneNumber);
-                sendPhoneNumber(phoneNumber);
+      function verification() {
+        let phoneNumber = document.getElementById("phone_number_field").value;
+        if (phoneNumber === "") {
+          alert("You need to input a phone number!");
+          return false;
+        }
+
+        if (!phoneSent) {
+          console.log(phoneNumber);
+          sendPhoneNumber(phoneNumber);
+        }
+      }
+
+      function verifyotp() {
+        let userCode = document.getElementById("otp_code_field").value;
+        $.ajax({
+          type: "POST",
+          url: "/verifyOTP",
+          data: { "verification-code": userCode },
+          success: function (data) {
+            if (data.status) {
+              let status = data.status;
+              switch (status) {
+                case "success":
+                  alert("Code verified");
+                  console.log("Code is right!");
+                  let form = document.getElementById("verification-form");
+                  form.classList.add("display__none");
+                  let message = document.getElementById("message");
+                  message.innerHTML = "Success!";
+                  message.classList.remove("display__none");
+                  break;
+                default:
+                  alert("An error occurred: " + status);
+                  break;
+              }
+            } else {
+              alert("An error occurred. Please try again.");
             }
-        }
-
-        function verifyotp() {
-            let userCode = document.getElementById('otp_code_field').value;
-            $.ajax({
-                type: "POST",
-                url: '/verifyOTP',
-                data: { "verification-code": userCode },
-                success: function (data) {
-                    if (data.status) {
-                        let status = data.status;
-                        switch (status) {
-                            case "success":
-                                console.log("Code is right!");
-                                let form = document.getElementById('verification-form');
-                                form.classList.add('display__none');
-                                let message = document.getElementById('message');
-                                message.innerHTML = "Success!";
-                                message.classList.remove('display__none');
-                                break;
-                            default:
-                                alert("An error occurred: " + status);
-                                break;
-                        }
-                    } else {
-                        alert("An error occurred. Please try again.");
-                    }
-                },
-                error: function (data) {
-                    console.log(data);
-                }
-            });
-        }
+          },
+          error: function (data) {
+            console.log(data);
+          },
+        });
+      }
     </script>
     <div class="main">
-        <div class="container">
-            <div id="verification-form">
-                <h1 style="color: #c2b97f;">OTP Verification Demo</h1>
-                <input type="text" name="name" placeholder="Enter name" id="info" />
-                <input type="number" name="prn" placeholder="Enter PRN" id="info" />
-                <input type="email" name="email" placeholder="Enter email" id="info" />
-                <input type="text" name="branch" placeholder="Enter your branch" id="info" />
-                <input type="text" name="phone-number" placeholder="Input phone number" id="phone_number_field" />                
-                <input type="text" name="verification-code" placeholder="Input verification code" id="otp_code_field" />
-                <button onclick="verification()">Submit</button>
-                <button onclick="verifyotp()">Verify OTP</button>
-
-            </div>
-            <h1 id="message" class="display__none">Code is successful</h1>
-
+      <div class="container">
+        <div id="verification-form">
+          <h1 style="color: #c2b97f">OTP Verification Demo</h1>
+          <input type="text" name="name" placeholder="Enter name" id="name" />
+          <input type="number" name="prn" placeholder="Enter PRN" id="prn" />
+          <input
+            type="email"
+            name="email"
+            placeholder="Enter email"
+            id="email"
+          />
+          <input
+            type="text"
+            name="branch"
+            placeholder="Enter your branch"
+            id="branch"
+          />
+          <input
+            type="text"
+            name="phone-number"
+            placeholder="Input phone number"
+            id="phone_number_field"
+          />
+          <input
+            type="text"
+            name="verification-code"
+            placeholder="Input verification code"
+            id="otp_code_field"
+          />
+          <button onclick="verification()">Submit</button>
+          <button onclick="verifyotp()">Verify OTP</button>
         </div>
+        <h1 id="message" class="display__none">Code is successful</h1>
+      </div>
     </div>
-</body>
+  </body>
 </html>
