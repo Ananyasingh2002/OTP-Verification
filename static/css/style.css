@@ -3,6 +3,7 @@
   font-family: Helvetica, serif;
 }
 
+
 .hidden {
   visibility: hidden;
   transition: visibility 0.3s, opacity 0.4s linear;
@@ -15,7 +16,7 @@
   opacity: 1;
 }
 body {
-  background-color: #c8a2c8;
+  background: linear-gradient(to right, #430b2d, black);
 }
 .main {
   display: flex;
@@ -31,9 +32,9 @@ body {
   align-items: center;
   width: 500px;
   height: 500px;
-  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+  box-shadow: 0 14px 28px rgb(70, 0, 39), 0 10px 10px rgb(48, 0, 28);
   border-radius: 10px;
-  background-color: white;
+  background-color: rgb(43, 43, 43);
 }
 
 .container > * {
@@ -44,9 +45,10 @@ body {
 #otp_code_field {
   height: 30px;
   width: 300px;
-  border: solid 1.5px #d3d3d3;
+  border: solid 1.5px #1a0808;
   border-radius: 5px;
   margin: 5px 0;
+
 }
 
 #info,
@@ -56,7 +58,7 @@ body {
 #branch {
   height: 30px;
   width: 300px;
-  border: solid 1.5px #d3d3d3;
+  border: solid 1.5px #000000;
   border-radius: 5px;
   margin: 5px 0;
 }
@@ -65,10 +67,11 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
+
 }
 
 .container button {
-  background-color: #c8a2c8;
+  background-color: #bd026c;
   border: none;
   height: 40px;
   width: 250px;
@@ -76,7 +79,15 @@ body {
   font-size: 16px;
   transition: 0.2s linear;
   margin: 10px 0;
+  border-radius: 5px;
 }
+#prn::-webkit-inner-spin-button,
+#prn::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+
 
 .container button:hover {
   cursor: pointer;
@@ -92,5 +103,5 @@ input {
 }
 
 h1 {
-  color: #c2b97f;
+  color: #ffffff;
 }
